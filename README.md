@@ -36,6 +36,7 @@ Data
     train_headtohead - training dataset to predict whether one team will beat another in the NCAA tournament. Takes historical NCAA tournament results with kenpom regular season data for each team.
 
 Code
+
   kenpom_master - combine all the kenpom datasets into a master dataset by team+season combo
   update_tables - reformatting kenpom dataset column names to be lowercased so Postgres code isn't quite as annoying
   train_headtohead - building the model training set above
