@@ -1,9 +1,11 @@
 # march_madness
 
 Summary
+
   Building a model to predict 2018 NCAA Tournament results for the 2018 Kaggle March Madness competition (https://www.kaggle.com/c/mens-machine-learning-competition-2018) and potentially other competitions.
 
 Data
+
   NCAA regular season, conference play, and tournament results data provided by the Kaggle website. Supplemental data was purchased from kenpom.com via a subscription. Data is not posted to GitHub and instead resides on a private hard drive. Each Kenpom dataset was downloaded from 2003-2017, combined into a single csv per dataset, and each loaded into a private PostgreSQL database. Each dataset is described below.
 
   There are two model training datasets created. They have most all possible data in the underlying raw tables included. Those datasets were created, cleaned, and combined in PostgreSQL. The code is included in my Github repo.
