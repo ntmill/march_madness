@@ -30,7 +30,7 @@ Data
 
   Created Data
 
-    teams_final - updated teams table to
+    teams_final - updated teams table to clean up team names using kenpom team names
     final_four - just looked up on Wikipedia the Final Four teams from each year
     train_finalfour_wins - training dataset compiled from mostly kenpom data to predict whether a team will make the final four,   how many wins in the tournament they will have, and whether they will survive round X in the Tournament.
     train_headtohead - training dataset to predict whether one team will beat another in the NCAA tournament. Takes historical NCAA tournament results with kenpom regular season data for each team.
