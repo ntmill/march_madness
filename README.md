@@ -1,5 +1,7 @@
 # march_madness
 
+Updated 3/6 by NMiller
+
 Summary
 
   Building a model to predict 2018 NCAA Tournament results for the 2018 Kaggle March Madness competition (https://www.kaggle.com/c/mens-machine-learning-competition-2018) and potentially other competitions.
