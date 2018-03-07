@@ -67,12 +67,9 @@ select distinct cts.teamseasonid
 from conf_tourney_setup cts
 left join conf_wins w on cts.teamseasonid = w.teamseasonid;
 
-<<<<<<< HEAD
 update conf_tourney_wins
 set conf_tourney_wins = 0 where conf_tourney_wins is null;
 
-=======
->>>>>>> cc7ebf1c9646ef1f0d952603a4ebcb041cf14c3f
 create table train_finalfour_wins as
 select distinct wffs.teamseasonid
 	,wffs.season
