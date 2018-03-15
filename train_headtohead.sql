@@ -95,7 +95,33 @@ select distinct season::varchar||wteamid::varchar as wteamseasonid
 from ncaa_tourney_results
 order by season::varchar||wteamid::varchar;
 
-/* step 8 - compile training dataset */
+/* step 8 - calculate adjusted wins from regular season */
+create table idx_adjem as
+select distinct teamseasonid
+	,season
+	,teamid
+	,adjem
+	,(select min(adjem) from kenpom_master) as min_adjem
+	,(select max(adjem) from kenpom_master) as max_adjem
+	,(adjem-(select min(adjem) from kenpom_master))/((select max(adjem) from kenpom_master)-(select min(adjem) from kenpom_master)) as idx_adjem
+from kenpom_master;
+
+create table adj_wins as
+select distinct rsr.season::varchar||rsr.wteamid as teamseasonid
+	,rsr.season
+	,rsr.wteamid as teamid
+	,t.teamname
+	,sum(case when idxl.idx_adjem is null then 0 else idxl.idx_adjem end) as adj_wins
+from reg_season_results rsr
+inner join teams t on rsr.wteamid = t.teamid
+left join idx_adjem idxw on rsr.season=idxw.season and rsr.wteamid = idxw.teamid
+left join idx_adjem idxl on rsr.season=idxl.season and rsr.lteamid = idxl.teamid
+group by rsr.season::varchar||rsr.wteamid
+	,rsr.season
+	,rsr.wteamid
+	,t.teamname;
+
+/* step 9 - compile training dataset */
 create table train_headtohead as
 select trc.game_id
 	,trc.season
@@ -148,6 +174,7 @@ select trc.game_id
 	,km1.def_1 as team1_def_1
 	,km1.def_2 as team1_def_2
 	,km1.def_3 as team1_def_3
+	,adj1.adj_wins as team1_adj_wins
 	,trc.team2_seed
 	,km2.tempo as team2_tempo
 	,km2.adjtempo as team2_adjtempo
@@ -189,6 +216,7 @@ select trc.game_id
 	,km2.def_1 as team2_def_1
 	,km2.def_2 as team2_def_2
 	,km2.def_3 as team2_def_3
+	,adj2.adj_wins as team2_adj_wins
 	,case when tr1.round = 1 then 1 when tr2.round = 1 then 1 else 0 end as is_round1
 	,case when tr1.round = 2 then 1 when tr2.round = 2 then 1 else 0 end as is_round2
 	,case when tr1.round = 3 then 1 when tr2.round = 3 then 1 else 0 end as is_round3
@@ -200,7 +228,9 @@ from tourney_results_combined_tourney_seeds trc
 left join kenpom_master km1 on trc.team1seasonid = km1.teamseasonid
 left join kenpom_master km2 on trc.team2seasonid = km2.teamseasonid
 left join tourney_round tr1 on trc.game_id = tr1.game_id1
-left join tourney_round tr2 on trc.game_id = tr2.game_id2;
+left join tourney_round tr2 on trc.game_id = tr2.game_id2
+left join adj_wins adj1 on trc.team1seasonid = adj1.teamseasonid
+left join adj_wins adj2 on trc.team2seasonid = adj2.teamseasonid;
 
 drop table max_row;
 drop table game_id;
@@ -211,6 +241,8 @@ drop table tourney_results_combined;
 drop table tourney_round;
 drop table tourney_results_combined_teamname;
 drop table tourney_results_combined_tourney_seeds;
+drop table idx_adjem;
+drop table adj_wins;
 
 /* LIU Brooklyn games not populating with kenpom data so deleting */
 delete from train_headtohead where team1_efg_pct_off is null;
@@ -218,4 +250,5 @@ delete from train_headtohead where team2_efg_pct_off is null;
 
 /* export file */
 copy train_headtohead to '/Users/ntmill/Library/Mobile Documents/com~apple~CloudDocs/Projects/March Madness/2018/data/train_headtohead.csv' delimiter ',' csv header;
+
 

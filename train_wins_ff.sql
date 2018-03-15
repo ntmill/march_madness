@@ -70,6 +70,31 @@ left join conf_wins w on cts.teamseasonid = w.teamseasonid;
 update conf_tourney_wins
 set conf_tourney_wins = 0 where conf_tourney_wins is null;
 
+create table idx_adjem as
+select distinct teamseasonid
+	,season
+	,teamid
+	,adjem
+	,(select min(adjem) from kenpom_master) as min_adjem
+	,(select max(adjem) from kenpom_master) as max_adjem
+	,(adjem-(select min(adjem) from kenpom_master))/((select max(adjem) from kenpom_master)-(select min(adjem) from kenpom_master)) as idx_adjem
+from kenpom_master;
+
+create table adj_wins as
+select distinct rsr.season::varchar||rsr.wteamid as teamseasonid
+	,rsr.season
+	,rsr.wteamid as teamid
+	,t.teamname
+	,sum(case when idxl.idx_adjem is null then 0 else idxl.idx_adjem end) as adj_wins
+from reg_season_results rsr
+inner join teams t on rsr.wteamid = t.teamid
+left join idx_adjem idxw on rsr.season=idxw.season and rsr.wteamid = idxw.teamid
+left join idx_adjem idxl on rsr.season=idxl.season and rsr.lteamid = idxl.teamid
+group by rsr.season::varchar||rsr.wteamid
+	,rsr.season
+	,rsr.wteamid
+	,t.teamname;
+
 create table train_finalfour_wins as
 select distinct wffs.teamseasonid
 	,wffs.season
@@ -115,9 +140,10 @@ select distinct wffs.teamseasonid
 	,km.def_1
 	,km.def_2
 	,km.def_3
+	,adjw.adj_wins
 	,right(left(nts.seed,3),2)::int as seed
-	,ctw.conf_tourney_wins
-	,wffs.wins as tourney_wins
+	,case when ctw.conf_tourney_wins is null then 0 else ctw.conf_tourney_wins end as conf_tourney_wins
+	,case when wffs.wins is null then 0 else wffs.wins end as tourney_wins
 	,wffs.final_four
 	,case when wffs.wins >= 1 then 1 else 0 end as won_round1
 	,case when wffs.wins >= 2 then 1 else 0 end as won_round2
@@ -129,6 +155,7 @@ from wins_finalfour_setup wffs
 left join kenpom_master km on wffs.teamseasonid = km.teamseasonid
 left join conf_tourney_wins ctw on wffs.teamseasonid = ctw.teamseasonid
 left join ncaa_tourney_seeds nts on wffs.teamseasonid = nts.season::varchar||nts.teamid::varchar
+left join adj_wins adjw on adjw.teamseasonid = wffs.teamseasonid
 where km.teamname is not null;
 
 drop table team_tournament_setup;
@@ -139,6 +166,8 @@ drop table wins_finalfour_setup;
 drop table conf_tourney_setup;
 drop table conf_tourney_wins;
 drop table conf_wins;
+drop table idx_adjem;
+drop table adj_wins;
 
 /* export file */
 copy train_finalfour_wins to '/Users/ntmill/Library/Mobile Documents/com~apple~CloudDocs/Projects/March Madness/2018/data/train_finalfour_wins.csv' delimiter ',' csv header;

@@ -3,7 +3,7 @@ Created 3/4/2018 by NMiller
 Objective - to create a master kenpom data table to append to historical tournament results
 ***********************************************************/
 
-drop table kenpom_master;
+drop table if exists kenpom_master;
 
 /* step 1 - create base table with kenpom summary statistics */
 create table kenpom_base as
@@ -90,3 +90,4 @@ drop table kenpom_ffo;
 drop table kenpom_ffd;
 drop table kenpom_add_heighexp;
 drop table kenpom_add_misc;
+
