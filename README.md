@@ -14,40 +14,41 @@
 
 ### Kaggle data
 
-```
+
     **conference_tourney_games** - a summary of historical conference tournament game results
-    ncaa_tourney_results - results of historical NCAA tournament conference_tourney_games
-    ncaa_tourney_seeds - by season, seeds by teamid
-    ncaa_tourney_slots - by season, the strong seed vs. weak seed
-    regular_season_compact_results - the results of each regular season conference_tourney_games
-    teams - an ID and team name for each team
-```
+    **ncaa_tourney_results** - results of historical NCAA tournament conference_tourney_games
+    **ncaa_tourney_seeds** - by season, seeds by teamid
+    **ncaa_tourney_slots** - by season, the strong seed vs. weak seed
+    **regular_season_compact_results** - the results of each regular season conference_tourney_games
+    **teams** - an ID and team name for each team
+
 
 ### Kenpom Data, each by team+season
 
-```
-    kenpom_master - blended all the below kenpom datasets into one master table by team and regular_season_compact_results
-    kenpom_fourfactor_off - the kenpom four factor offensive statistics
-    kenpom_fourfactor_def - the kenpom four factor defensive statistics
-    kenpom_heightexp - only starting in 2008, the height by team and position along with relative experience
-    kenpom_misc - some additional misc statistics
-    kenpom_pointdist - offensive and defensive 1, 2, and 3 point totals
-```
+    **kenpom_master** - blended all the below kenpom datasets into one master table by team and regular_season_compact_results
+    **kenpom_fourfactor_off** - the kenpom four factor offensive statistics
+    **kenpom_fourfactor_def** - the kenpom four factor defensive statistics
+    **kenpom_heightexp** - only starting in 2008, the height by team and position along with relative experience
+    **kenpom_misc** - some additional misc statistics
+    **kenpom_pointdist** - offensive and defensive 1, 2, and 3 point totals
 
-### Created Data
+### Other Data
 
-```
-    teams_final - updated teams table to clean up team names using kenpom team names
-    final_four - just looked up on Wikipedia the Final Four teams from each year
-    train_finalfour_wins - training dataset compiled from mostly kenpom data to predict how many wins the team will have in tourney
-    train_headtohead - training dataset to predict whether one team will beat another in the NCAA tournament. Takes historical NCAA tournament results with kenpom regular season data for each team.
-```
+
+    **teams_final** - updated teams table to clean up team names using kenpom team names
+    **final_four** - just looked up on Wikipedia the Final Four teams from each year
+    **train_finalfour_wins** - training dataset compiled from mostly kenpom data to predict how many wins the team will have in tourney
+    **train_headtohead** - training dataset to predict whether one team will beat another in the NCAA tournament. Takes historical NCAA tournament results with kenpom regular season data for each team.
+
 
 ### Code
 
-```
-  kenpom_master - combine all the kenpom datasets into a master dataset by team+season combo
-  update_tables - reformatting kenpom dataset column names to be lowercased so Postgres code isn't quite as annoying
-  train_headtohead - building the model training set above
-  train_wins_ff - building the model training set above
-```
+  **kenpom_master** - combine all the kenpom datasets into a master dataset by team+season combo
+  **update_tables** - reformatting kenpom dataset column names to be lowercased so Postgres code isn't quite as annoying
+  **train_headtohead** - building the model training set above
+  **train_wins_ff** - building the model training set above
+  **model_initial** - R code building Random Forest and xgboost models
+
+Good luck all,
+
+Nathan
