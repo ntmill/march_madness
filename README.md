@@ -15,12 +15,12 @@
 ### Kaggle data
 
 
-    **conference_tourney_games** - a summary of historical conference tournament game results
-    **ncaa_tourney_results** - results of historical NCAA tournament conference_tourney_games
-    **ncaa_tourney_seeds** - by season, seeds by teamid
-    **ncaa_tourney_slots** - by season, the strong seed vs. weak seed
-    **regular_season_compact_results** - the results of each regular season conference_tourney_games
-    **teams** - an ID and team name for each team
+    conference_tourney_games - a summary of historical conference tournament game results
+    ncaa_tourney_results - results of historical NCAA tournament conference_tourney_games
+    ncaa_tourney_seeds - by season, seeds by teamid
+    ncaa_tourney_slots - by season, the strong seed vs. weak seed
+    regular_season_compact_results - the results of each regular season conference_tourney_games
+    teams - an ID and team name for each team
 
 
 ### Kenpom Data, each by team+season
